@@ -10,7 +10,8 @@ export default function SelectNumber(props: selectNumberProps) {
     >
       {arr.map((_, index) => (
         <option key={index + 1} value={index + 1}>
-          {index + 1}
+          {/* {index + 1} */}
+          {props.selectContent(index + 1)}
         </option>
       ))}
     </select>
@@ -20,6 +21,8 @@ export default function SelectNumber(props: selectNumberProps) {
 interface selectNumberProps {
   maxValue: number;
   onSelected(value: number): void;
+  //bring in params from other stuff to show as params in other stuff...
+  selectContent(value: number): React.ReactNode;
 }
 
 SelectNumber.defaultProps = {
