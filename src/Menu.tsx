@@ -30,7 +30,7 @@ export default function Menu() {
               </NavLink>
             </li>
             <li>
-              <NavLink className="nav-link" to="/movie/create">
+              <NavLink className="nav-link" to="/movies/create">
                 Create a Movie
               </NavLink>
             </li>
