@@ -1,4 +1,3 @@
-import { format } from "path";
 import { actorCreationDTO } from "../actors/actors.model";
 
 export function convertActorToFormData(actor: actorCreationDTO): FormData {

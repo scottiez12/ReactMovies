@@ -12,3 +12,11 @@ export interface actorMovieDTO {
   character: string;
   picture: string;
 }
+
+export interface actorDTO {
+  id: number;
+  name: string;
+  biography: string;
+  dateOfBirth: Date;
+  picture: string;
+}
