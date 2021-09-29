@@ -1,38 +1,22 @@
+import axios, { AxiosResponse } from "axios";
 import { ReactElement, useState } from "react";
-import { Typeahead } from "react-bootstrap-typeahead";
+import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { actorMovieDTO } from "../actors/actors.model";
+import { urlActors } from "../Endpoints";
 
 export default function TypeAheadActors(props: typeAheadActorsProps) {
-  const actors: actorMovieDTO[] = [
-    {
-      id: 1,
-      name: "Scott",
-      character: "",
-      picture:
-        "https://www.looper.com/img/gallery/sword-art-online-progressive-aria-of-a-starless-night-release-date-characters-and-plot-what-we-know-so-far/intro-1629742703.jpg",
-    },
-    {
-      id: 2,
-      name: "Tess",
-      character: "",
-      picture:
-        "https://cdn.myanimelist.net/r/360x360/images/characters/15/262053.jpg?s=9da4781b201d740c30737ebf838b1a6d",
-    },
-    {
-      id: 3,
-      name: "Miles",
-      character: "",
-      picture:
-        "https://www.dogtime.com/assets/uploads/2019/07/labradane-mixed-dog-breed-pictures-cover.jpg",
-    },
-    {
-      id: 4,
-      name: "Gabby",
-      character: "",
-      picture:
-        "https://upload.wikimedia.org/wikipedia/en/thumb/9/98/Sinon_Code_Register.png/230px-Sinon_Code_Register.png",
-    },
-  ];
+  const [actors, setActors] = useState<actorMovieDTO[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleSearch(query: string) {
+    setIsLoading(true);
+    axios
+      .get(`${urlActors}/searchByName/${query}`)
+      .then((response: AxiosResponse<actorMovieDTO[]>) => {
+        setActors(response.data);
+        setIsLoading(false);
+      });
+  }
 
   const selected: actorMovieDTO[] = [];
   const [draggedElement, setDraggedElement] = useState<
@@ -62,18 +46,19 @@ export default function TypeAheadActors(props: typeAheadActorsProps) {
   return (
     <div className="mb-3">
       <label>{props.displayName}</label>
-      <Typeahead
+      <AsyncTypeahead
         id="typeahead"
         onChange={(actors) => {
           if (props.actors.findIndex((x) => x.id === actors[0].id) === -1) {
+            actors[0].character = "";
             props.onAdd([...props.actors, actors[0]]);
           }
-
-          console.log(actors);
         }}
         options={actors}
         labelKey={(actor) => actor.name}
-        filterBy={["name"]}
+        filterBy={() => true}
+        isLoading={isLoading}
+        onSearch={handleSearch}
         placeholder="Write the name of the actor"
         minLength={1}
         flip={true}

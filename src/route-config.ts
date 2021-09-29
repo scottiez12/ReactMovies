@@ -8,6 +8,7 @@ import CreateMovie from "./movies/CreateMovie";
 import EditMovie from "./movies/EditMovie";
 import FilterMovies from "./movies/FilterMovies";
 import LandingPage from "./movies/LandingPage";
+import MovieDetails from "./movies/MovieDetails";
 import CreateMovieTheater from "./movieTheaters/CreateMovieTheater";
 import EditMovieTheater from "./movieTheaters/EditMovieTheater";
 import IndexMovieTheaters from "./movieTheaters/IndexMovieTheaters";
@@ -31,6 +32,7 @@ const routes = [
   { path: "/movies/create", component: CreateMovie },
   { path: "/movies/edit/:id(\\d+)", component: EditMovie },
   { path: "/movies/filter", component: FilterMovies },
+  { path: "/movie/:id(\\d+)", component: MovieDetails },
 
   { path: "/", component: LandingPage, exact: true },
   //to handle routes that don't exist (404's)... the "*" is a catch-all wildcard

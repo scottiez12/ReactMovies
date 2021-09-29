@@ -1,45 +1,70 @@
-import { actorMovieDTO } from "../actors/actors.model";
-import { genreDTO } from "../genres/genres.model";
-import { movieTheaterDTO } from "../movieTheaters/movieTheater.model";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import { urlMovies } from "../Endpoints";
+import DisplayErrors from "../utilities/DisplayErrors";
+import { convertMovieToFormData } from "../utilities/formDataUtilities";
+import Loading from "../utilities/Loading";
+import { movieCreationDTO, moviePutGetDTO } from "./movie.model";
 import MovieForm from "./MovieForm";
 
 export default function EditMovie() {
-  const nonSelectedGenres: genreDTO[] = [{ id: 2, name: "Drama" }];
-  const selectedGenres: genreDTO[] = [{ id: 1, name: "Comedy" }];
-  const selectedMovieTheaters: movieTheaterDTO[] = [
-    { id: 2, name: "Des Peres" },
-  ];
-  const nonSelectedMovieTheaters: movieTheaterDTO[] = [
-    { id: 1, name: "Crestwood" },
-  ];
+  const { id }: any = useParams();
+  const [movie, setMovie] = useState<movieCreationDTO>();
+  const [moviePutGet, setMoviePutGet] = useState<moviePutGetDTO>();
+  const history = useHistory();
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const selectedActors: actorMovieDTO[] = [
-    {
-      id: 3,
-      name: "Miles",
-      character: "Himself",
-      picture:
-        "https://www.dogtime.com/assets/uploads/2019/07/labradane-mixed-dog-breed-pictures-cover.jpg",
-    },
-  ];
+  useEffect(() => {
+    axios
+      .get(`${urlMovies}/PutGet/${id}`)
+      .then((response: AxiosResponse<moviePutGetDTO>) => {
+        const model: movieCreationDTO = {
+          title: response.data.movie.title,
+          inTheaters: response.data.movie.inTheaters,
+          trailer: response.data.movie.trailer,
+          posterURL: response.data.movie.poster,
+          summary: response.data.movie.summary,
+          releaseDate: new Date(response.data.movie.releaseDate),
+        };
+        setMovie(model);
+        setMoviePutGet(response.data);
+      });
+  }, [id]);
+
+  async function edit(movieToEdit: movieCreationDTO) {
+    try {
+      const formData = convertMovieToFormData(movieToEdit);
+      await axios({
+        method: "put",
+        url: `${urlMovies}/${id}`,
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      history.push(`/movie/${id}`);
+    } catch (error) {
+      const err = error as AxiosError;
+      setErrors(err.response?.data);
+    }
+  }
 
   return (
     <>
       <h3>Edit Movie</h3>
-      <MovieForm
-        model={{
-          title: "Lilo and Stitch",
-          inTheaters: false,
-          trailer: "url",
-          releaseDate: new Date("2003-04-01T00:00:00"),
-        }}
-        onSubmit={(values) => console.log(values)}
-        selectedGenres={selectedGenres}
-        nonSelectedGenres={nonSelectedGenres}
-        selectedMovieTheaters={selectedMovieTheaters}
-        nonSelectedMovieTheaters={nonSelectedMovieTheaters}
-        selectedActors={selectedActors}
-      />
+      <DisplayErrors errors={errors} />
+      {movie && moviePutGet ? (
+        <MovieForm
+          model={movie}
+          onSubmit={async (values) => await edit(values)}
+          selectedGenres={moviePutGet.selectedGenres}
+          nonSelectedGenres={moviePutGet.nonSelectedGenres}
+          selectedMovieTheaters={moviePutGet.selectedMovieTheaters}
+          nonSelectedMovieTheaters={moviePutGet.nonSelectedMovieTheaters}
+          selectedActors={moviePutGet.actors}
+        />
+      ) : (
+        <Loading />
+      )}
     </>
   );
 }

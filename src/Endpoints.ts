@@ -5,3 +5,5 @@ export const urlGenres = `${baseApiURL}/genres`;
 export const urlActors = `${baseApiURL}/actors`;
 
 export const urlMovieTheaters = `${baseApiURL}/movieTheaters`;
+
+export const urlMovies = `${baseApiURL}/movies`;

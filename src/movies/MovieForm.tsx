@@ -15,6 +15,7 @@ import { genreDTO } from "../genres/genres.model";
 import { movieTheaterDTO } from "../movieTheaters/movieTheater.model";
 import TypeAheadActors from "../forms/TypeAheadActors";
 import { actorMovieDTO } from "../actors/actors.model";
+import MarkdownField from "../forms/MarkdownField";
 
 export default function MovieForm(props: movieFormProps) {
   const [selectedGenres, setSelectedGenres] = useState(
@@ -62,6 +63,7 @@ export default function MovieForm(props: movieFormProps) {
           <CheckboxField displayName="In Theaters" field="inTheaters" />
           <TextField displayName="Trailer" field="trailer" />
           <DateField displayName="Release Date" field="releaseDate" />
+          <MarkdownField displayName="Summary" field="summary" />
           <ImageField
             displayName="Poster"
             field="poster"
