@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import Authorize from "./auth/Authorize";
 
 export default function Menu() {
   return (
@@ -10,30 +11,38 @@ export default function Menu() {
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li>
-              <NavLink className="nav-link" to="/genres">
-                Genres
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className="nav-link" to="/actors">
-                Actors
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className="nav-link" to="/movieTheaters">
-                Movie Theaters
-              </NavLink>
-            </li>
-            <li>
               <NavLink className="nav-link" to="/movies/filter">
-                Movie Filter
+                Filter Movies
               </NavLink>
             </li>
-            <li>
-              <NavLink className="nav-link" to="/movies/create">
-                Create a Movie
-              </NavLink>
-            </li>
+
+            <Authorize
+              role="admin"
+              authorized={
+                <>
+                  <li>
+                    <NavLink className="nav-link" to="/genres">
+                      Genres
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="nav-link" to="/actors">
+                      Actors
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="nav-link" to="/movieTheaters">
+                      Movie Theaters
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="nav-link" to="/movies/create">
+                      Create a Movie
+                    </NavLink>
+                  </li>
+                </>
+              }
+            />
           </ul>
         </div>
       </div>

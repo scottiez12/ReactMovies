@@ -1,29 +1,47 @@
+import { useState } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
+import { claim } from "./auth/auth.models";
 import Menu from "./Menu";
 import routes from "./route-config";
 import configureValidations from "./Validations";
-
+import AuthenticationContext from "./auth/AuthenticationContext";
 configureValidations();
 
 function App() {
+  const [claims, setClaims] = useState<claim[]>([]);
+
+  function isAdmin() {
+    return (
+      claims.findIndex(
+        (claim) => claim.name === "role" && claim.value === "admin"
+      ) > -1
+    );
+  }
+
   return (
     <BrowserRouter>
-      <Menu />
-      <div className="container">
-        <Switch>
-          {routes.map((route) => (
-            <Route key={route.path} path={route.path} exact={route.exact}>
-              <route.component />
-            </Route>
-          ))}
-        </Switch>
-      </div>
-      <footer className="bd-footer py-5 mt-5 bg-light">
-        <div className="container" style={{ textAlign: "center" }}>
-          React Movies @{new Date().getFullYear().toString()}
+      <AuthenticationContext.Provider value={{ claims, update: setClaims }}>
+        <Menu />
+        <div className="container">
+          <Switch>
+            {routes.map((route) => (
+              <Route key={route.path} path={route.path} exact={route.exact}>
+                {route.isAdmin && !isAdmin() ? (
+                  <>You're not allowed to see this page.</>
+                ) : (
+                  <route.component />
+                )}
+              </Route>
+            ))}
+          </Switch>
         </div>
-      </footer>
+        <footer className="bd-footer py-5 mt-5 bg-light">
+          <div className="container" style={{ textAlign: "center" }}>
+            React Movies @{new Date().getFullYear().toString()}
+          </div>
+        </footer>
+      </AuthenticationContext.Provider>
     </BrowserRouter>
   );
 }
