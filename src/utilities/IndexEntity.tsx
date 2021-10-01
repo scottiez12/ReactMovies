@@ -29,6 +29,7 @@ export default function IndexEntity<T>(props: indexEntityProps<T>) {
           10
         );
         console.log(totalAmountOfRecords);
+
         setTotalAmountOfPages(Math.ceil(totalAmountOfRecords / recordsPerPage));
         setEntities(response.data);
       });
@@ -63,9 +64,12 @@ export default function IndexEntity<T>(props: indexEntityProps<T>) {
   return (
     <>
       <h3>{props.title}</h3>
-      <Link className="btn btn-primary mx-1" to={props.createUrl}>
-        Create {props.entityName}
-      </Link>
+      {props.createUrl ? (
+        <Link className="btn btn-primary mx-1" to={props.createUrl}>
+          Create {props.entityName}
+        </Link>
+      ) : null}
+
       <Pagination
         currentPage={page}
         totalAmountOfPages={totalAmountOfPages}
@@ -89,8 +93,8 @@ export default function IndexEntity<T>(props: indexEntityProps<T>) {
 interface indexEntityProps<T> {
   url: string;
   title: string;
-  createUrl: string;
-  entityName: string;
+  createUrl?: string;
+  entityName?: string;
   children(
     entities: T[],
     buttons: (editUrl: string, id: number) => ReactElement

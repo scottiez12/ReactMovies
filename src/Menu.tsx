@@ -53,6 +53,11 @@ export default function Menu() {
                       Create a Movie
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink className="nav-link" to="/users">
+                      Users
+                    </NavLink>
+                  </li>
                 </>
               }
             />

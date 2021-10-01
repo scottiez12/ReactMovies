@@ -7,7 +7,9 @@ import routes from "./route-config";
 import configureValidations from "./Validations";
 import AuthenticationContext from "./auth/AuthenticationContext";
 import { getClaims } from "./auth/handleJwt";
+import configureInterceptor from "./utilities/httpInterceptors";
 configureValidations();
+configureInterceptor();
 
 function App() {
   const [claims, setClaims] = useState<claim[]>([]);

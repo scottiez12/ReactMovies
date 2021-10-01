@@ -1,12 +1,15 @@
 import axios, { AxiosResponse } from "axios";
+import { swap } from "formik";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { urlMovies } from "../Endpoints";
+import Swal from "sweetalert2";
+import { urlMovies, urlRatings } from "../Endpoints";
 import coordinateDTO from "../utilities/coordinates.model";
 import Loading from "../utilities/Loading";
 import Map from "../utilities/Map";
+import Ratings from "../utilities/Ratings";
 import { movieDTO } from "./movie.model";
 
 export default function MovieDetails() {
@@ -48,6 +51,12 @@ export default function MovieDetails() {
     return [];
   }
 
+  function handleRate(rate: number) {
+    axios.post(`${urlRatings}`, { rating: rate, movieId: id }).then(() => {
+      Swal.fire({ icon: "success", title: "Rating Received" });
+    });
+  }
+
   return movie ? (
     <div>
       <h2>
@@ -62,8 +71,14 @@ export default function MovieDetails() {
         >
           {genre.name}
         </Link>
-      ))}{" "}
-      | {movie.releaseDate.toDateString()}
+      ))}
+      | {movie.releaseDate.toDateString()}| Your Vote:
+      <Ratings
+        maximumValue={5}
+        selectedValue={movie.userVote}
+        onChange={handleRate}
+      />
+      | Average: {movie.averageVote}
       <div style={{ display: "flex", marginTop: "1rem" }}>
         <span style={{ display: "inline-block", marginRight: "1rem" }}>
           <img

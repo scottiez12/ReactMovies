@@ -9,3 +9,5 @@ export const urlMovieTheaters = `${baseApiURL}/movieTheaters`;
 export const urlMovies = `${baseApiURL}/movies`;
 
 export const urlAccounts = `${baseApiURL}/accounts`;
+
+export const urlRatings = `${baseApiURL}/ratings`;
